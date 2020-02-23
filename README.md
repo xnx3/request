@@ -18,7 +18,7 @@ var params = {
 	'author':'guanleiming',
 	'site':'www.guanleiming.com'
 }
-request.get('http://www.leimingyun.com',params, function(data){
+request.post('http://www.leimingyun.com',params, function(data){
 	console.log(data);
 });
 ````
