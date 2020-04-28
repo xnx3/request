@@ -9,7 +9,9 @@
 var request = {
 	/**
 	 * get请求
-	 * @param text 提示文字
+	 * @param url 请求的接口URL，传入如 http://www.xxx.com/a.php
+	 * @param data 请求的参数数据，传入如 {"goodsid":"1", "author":"管雷鸣"}
+	 * @param func 请求完成的回调，传入如 function(data){ console.log(data); }
 	 */
 	get:function(url, data, func){
 		var headers = {
@@ -19,9 +21,11 @@ var request = {
 	},
 	/**
 	 * post请求
-	 * @param text 提示文字
+	 * @param url 请求的接口URL，传入如 http://www.xxx.com/a.php
+	 * @param data 请求的参数数据，传入如 {"goodsid":"1", "author":"管雷鸣"}
+	 * @param func 请求完成的回调，传入如 function(data){ console.log(data); }
 	 */
-	post:function(text){
+	post:function(url, data, func){
 		var headers = {
 			'content-type':'application/x-www-form-urlencoded'
 		};
@@ -38,18 +42,15 @@ var request = {
 	 * abnormalFunc 响应异常所执行的方法，响应码不是200就会执行这个方法 ,传入如 function(xhr){}
 	 */
 	send:function(url, data, func, method, isAsynchronize, headers, abnormalFunc){
-		data['storeid'] = storeid;
-		if(getToken != null){
-			data['token'] = getToken();
-		}
-
 		//post提交的参数
 		var params = '';
-		for(var index in data){
-			if(params.length > 0){
-				params = params + '&';
+		if(data != null){
+			for(var index in data){
+				if(params.length > 0){
+					params = params + '&';
+				}
+				params = params + index + '=' + data[index];
 			}
-			params = params + index + '=' + data[index];
 		}
 		
 		var xhr=null;
