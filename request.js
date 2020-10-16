@@ -91,5 +91,64 @@ var request = {
 		        }
 		    }
 		}
+	},
+
+	/**
+	 * 文件上传
+	 * url 请求的url
+	 * data 请求的数据，如 {"author":"管雷鸣",'site':'www.guanleiming.com'} 
+	 * file 要上传的文件。可以通过input的 e.srcElement.files[0] 获取
+	 * successFunc 请求成功的回调，响应码是200就会执行这个。传入如 function(data){}
+	 * headers 设置请求的header，传入如 {'content-type':'application/x-www-form-urlencoded'};
+	 * abnormalFunc 响应异常所执行的方法，响应码不是200就会执行这个方法 ,传入如 function(xhr){}
+	 */
+	upload:function(url,data, file, successFunc, headers, abnormalFunc){
+		//post提交的参数
+		var fd = new FormData();
+		fd.append('file', file);
+		if(data != null){
+			for(var index in data){
+				fd.append(index, data[index]);
+			}
+		}
+		
+		var xhr=null;
+		try{
+			xhr=new XMLHttpRequest();
+		}catch(e){
+			xhr=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		//2.调用open方法（true----异步）
+		xhr.open('POST',url,true);
+		//设置headers
+		if(headers != null){
+			for(var index in headers){
+				xhr.setRequestHeader(index,headers[index]);
+			}
+		}
+		xhr.send(fd);
+		//4.请求状态改变事件
+		xhr.onreadystatechange=function(){
+		    if(xhr.readyState==4){
+		        if(xhr.status==200){
+		        	//请求正常，响应码 200
+		        	var json = null;
+		        	try{
+		        		json = JSON.parse(xhr.responseText);
+		        	}catch(e){
+		        		console.log(e);
+		        	}
+		        	if(json == null){
+		        		successFunc(xhr.responseText);
+		        	}else{
+		        		successFunc(json);
+		        	}
+		        }else{
+		        	if(abnormalFunc != null){
+		        		abnormalFunc(xhr);
+		        	}
+		        }
+		    }
+		}
 	}
 }
